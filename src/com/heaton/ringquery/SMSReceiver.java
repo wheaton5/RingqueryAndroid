@@ -14,18 +14,21 @@ public class SMSReceiver extends BroadcastReceiver {
 		Bundle bundle = intent.getExtras();
 		SmsMessage[] msgs = null;
 		String str = "";
+		boolean question = false;
 		if(bundle != null){
 			Object[] pdus = (Object[])bundle.get("pdus");
 			msgs = new SmsMessage[pdus.length];
+			
 			for(int ii = 0; ii < msgs.length; ii++){
 				msgs[ii] = SmsMessage.createFromPdu((byte[])pdus[ii]);
 				str += "SMS from "+msgs[ii].getOriginatingAddress();
 				str += " :";
 				str += msgs[ii].getMessageBody().toString();
 				str += "\n";
+				if(msgs[ii].getMessageBody().toString().contains("?")) question = true;
 			}
 		}
-		Toast.makeText(context, "Intent Detected. "+str, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Intent Detected. "+str+(question?" IS A QUESTION ":" is not a question. "), Toast.LENGTH_LONG).show();
 	}
 
 }
