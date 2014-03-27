@@ -26,15 +26,17 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Button button1;
 	private Intent Mringtone;
 
+	static Uri ringtoneURI = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		RelativeLayout rl = (RelativeLayout)findViewById(id))(R.id.action_settings);
-//		rl.setBackgroundColor(Color.DKGRAY);
-		
+		//		RelativeLayout rl = (RelativeLayout)findViewById(id))(R.id.action_settings);
+		//		rl.setBackgroundColor(Color.DKGRAY);
+		ringtoneURI = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
+
 		setContentView(R.layout.activity_main);
-//		findViewById(R.layout.activity_main).getContext().getResources().getColor(android.R.color.background_dark);
+		//		findViewById(R.layout.activity_main).getContext().getResources().getColor(android.R.color.background_dark);
 
 		mRingtoneManager = new RingtoneManager(this);
 		mcursor = mRingtoneManager.getCursor();
@@ -56,7 +58,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		Toast.makeText(arg0.getContext(),"select a ringtone", Toast.LENGTH_LONG).show();
-		// TODO Auto-generated method stub
 		//Starts the intent or Activity of the ringtone manager, opens popup box
 		Mringtone = new Intent(mRingtoneManager.ACTION_RINGTONE_PICKER);
 
@@ -82,39 +83,44 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent Mringtone) {
-		switch (resultCode) {
+		//		switch (resultCode) {
 		/*
 		 * 
 		 */
-		case RESULT_OK: 
+		if(resultCode == RESULT_OK){
 			//sents the ringtone that is picked in the Ringtone Picker Dialog
 			Uri uri = Mringtone.getParcelableExtra(mRingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-
+			ringtoneURI = uri;
 			//send the output of the selected to a string
 			String test = uri.toString();
 
 			//the program creates a "line break" when using the "\n" inside a string value
-			text.setText("\n " + test + "\n " + title);
+//			text.setText("\n " + test + "\n " + title);
 
 			//prints out the result in the console window
 			Log.i("Sample", "uri " + uri);
 
 			//this passed the ringtone selected from the user to a new method
-			play(uri);
+//			Ringtone rt = play(uri);
 
 			//inserts another line break for more data, this times adds the cursor count on the selected item
-			text.append("\n " + mcursor.getCount()); 
+//			text.append("\n " + mcursor.getCount()); 
 
 			//set default ringtone
-			try
-			{ 
-				RingtoneManager.setActualDefaultRingtoneUri(this, resultCode, uri);
-			}
-			catch (Exception localException)
-			{
-
-			}
-			break; 
+			//			try
+			//			{ 
+			////				RingtoneManager.setActualDefaultRingtoneUri(
+			////						  MainActivity.this,
+			////						  RingtoneManager.TYPE_NOTIFICATION,
+			////						  uri
+			////						);
+			////				RingtoneManager.setActualDefaultRingtoneUri(this, resultCode, uri);
+			//			}
+			//			catch (Exception localException)
+			//			{
+			//
+			////			}
+			//			break; 
 
 
 		}
@@ -122,15 +128,16 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 
-	private void play(Uri uri) {
+	private Ringtone play(Uri uri) {
 		if (uri != null) {
 
-		//in order to play the ringtone, you need to create a new Ringtone with RingtoneManager and pass it to a variable
-		Ringtone rt = mRingtoneManager.getRingtone(this, uri);
-		rt.play();
-
+			//in order to play the ringtone, you need to create a new Ringtone with RingtoneManager and pass it to a variable
+			Ringtone rt = mRingtoneManager.getRingtone(this, uri);
+			rt.play();
+			return rt;
 		}
-		
+		return null;
+
 	}
 
 }
